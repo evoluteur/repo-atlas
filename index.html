@@ -1,29 +1,77 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-063933E3C2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-063933E3C2");
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <title>repo-atlas</title>
+    <title>repo-atlas · Map a GitHub user's repos by topic and stars</title>
+    <link rel="canonical" href="https://evoluteur.github.io/repo-atlas/" />
     <meta
       name="description"
       content="Type a GitHub username, get the map of what they've actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged."
     />
+    <meta
+      name="keywords"
+      content="github, repositories, repos, portfolio, map, clustering, topics, stars, stargazers, star history, stale repos, github api, d3, visualization, developer tools, open source"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Olivier Giulieri" />
+    <meta name="theme-color" content="#f3f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f151c" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Evoluteur" />
     <meta property="og:title" content="repo-atlas" />
     <meta
       property="og:description"
-      content="The map of what a GitHub user has actually built."
+      content="The map of what a GitHub user has actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged."
     />
     <meta property="og:url" content="https://evoluteur.github.io/repo-atlas/" />
-    <meta
-      property="og:image"
-      content="https://evoluteur.github.io/repo-atlas/repo-atlas.png"
-    />
+    <meta property="og:image" content="https://evoluteur.github.io/repo-atlas/repo-atlas.png" />
     <meta property="og:image:width" content="2400" />
     <meta property="og:image:height" content="1260" />
+    <meta property="og:image:alt" content="repo-atlas map of a GitHub account: repos grouped by topic as colored circles, with the ones needing attention listed" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="repo-atlas" />
+    <meta
+      name="twitter:description"
+      content="The map of what a GitHub user has actually built."
+    />
+    <meta name="twitter:image" content="https://evoluteur.github.io/repo-atlas/repo-atlas.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "repo-atlas",
+        "description": "Type a GitHub username, get the map of what they’ve actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged.",
+        "url": "https://evoluteur.github.io/repo-atlas/",
+        "image": "https://evoluteur.github.io/repo-atlas/repo-atlas.png",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web browser)",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "license": "https://github.com/evoluteur/repo-atlas/blob/main/LICENSE",
+        "author": {
+          "@type": "Person",
+          "name": "Olivier Giulieri",
+          "url": "https://evoluteur.github.io/"
+        },
+        "sameAs": "https://github.com/evoluteur/repo-atlas"
+      }
+    </script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 26 26%22%3E%3Cstyle%3E.r%7Bstroke:%2316202b%7D%40media (prefers-color-scheme:dark)%7B.r%7Bstroke:%23e9eef2%7D%7D%3C/style%3E%3Ccircle class=%22r%22 cx=%2213%22 cy=%2213%22 r=%2212%22 fill=%22none%22 stroke-width=%221.5%22/%3E%3Ccircle cx=%229%22 cy=%2210%22 r=%225%22 fill=%22%232a78d6%22/%3E%3Ccircle cx=%2217.5%22 cy=%2211%22 r=%223.2%22 fill=%22%23eb6834%22/%3E%3Ccircle cx=%2213%22 cy=%2218%22 r=%223.6%22 fill=%22%231baf7a%22/%3E%3C/svg%3E" />
     <link rel="alternate icon" type="image/png" href="favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

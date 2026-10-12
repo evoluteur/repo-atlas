@@ -11,12 +11,22 @@
     "url": "https://github.com/evoluteur/repo-atlas.git"
   },
   "keywords": [
+    "github",
     "github-api",
-    "d3",
+    "repositories",
     "portfolio",
+    "map",
     "clustering",
+    "topics",
+    "stars",
+    "star-history",
+    "stargazers",
+    "stale-repos",
+    "tech-debt",
+    "d3",
+    "visualization",
     "developer-tools",
-    "visualization"
+    "open-source"
   ],
   "scripts": {
     "test": "node --test test/atlas.test.js",
