@@ -64,10 +64,10 @@ test/atlas.test.js
 
 Reuses ideas from [meet-the-fans](https://github.com/evoluteur/meet-the-fans) (GitHub API + D3), [github-projects-cards](https://github.com/evoluteur/github-projects-cards) and [npm-pulse](https://github.com/evoluteur/npm-pulse).
 
-Had fun browsing the app? [Buy me a coffee by becoming a sponsor](https://github.com/sponsors/evoluteur).
+Useful map? [Sponsor me on GitHub](https://github.com/sponsors/evoluteur) to keep tools like this free.
 
 ## License
 
-[Repo-Atlas](http://github.com/evoluteur/repo-atlas/) is Open Source wih [MIT license](http://github.com/evoluteur/repo-atlas/blob/master/LICENSE).
+[Repo-Atlas](http://github.com/evoluteur/repo-atlas/) is Open Source with [MIT license](http://github.com/evoluteur/repo-atlas/blob/main/LICENSE).
 
 Copyright (c) 2026 [Olivier Giulieri](https://evoluteur.github.io/).
