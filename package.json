@@ -1,0 +1,25 @@
+{
+  "name": "repo-atlas",
+  "version": "0.1.0",
+  "description": "Type a GitHub username, get the map of what they've actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged.",
+  "private": true,
+  "license": "MIT",
+  "author": "Olivier Giulieri",
+  "homepage": "https://evoluteur.github.io/repo-atlas/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evoluteur/repo-atlas.git"
+  },
+  "keywords": [
+    "github-api",
+    "d3",
+    "portfolio",
+    "clustering",
+    "developer-tools",
+    "visualization"
+  ],
+  "scripts": {
+    "test": "node --test test/atlas.test.js",
+    "build": "node scripts/build-single.js"
+  }
+}

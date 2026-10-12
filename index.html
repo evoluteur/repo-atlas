@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>repo-atlas</title>
+    <meta
+      name="description"
+      content="Type a GitHub username, get the map of what they've actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged."
+    />
+    <meta property="og:title" content="repo-atlas" />
+    <meta
+      property="og:description"
+      content="The map of what a GitHub user has actually built."
+    />
+    <meta property="og:url" content="https://evoluteur.github.io/repo-atlas/" />
+    <meta
+      property="og:image"
+      content="https://evoluteur.github.io/repo-atlas/repo-atlas.png"
+    />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 26 26%22%3E%3Cstyle%3E.r%7Bstroke:%2316202b%7D%40media (prefers-color-scheme:dark)%7B.r%7Bstroke:%23e9eef2%7D%7D%3C/style%3E%3Ccircle class=%22r%22 cx=%2213%22 cy=%2213%22 r=%2212%22 fill=%22none%22 stroke-width=%221.5%22/%3E%3Ccircle cx=%229%22 cy=%2210%22 r=%225%22 fill=%22%232a78d6%22/%3E%3Ccircle cx=%2217.5%22 cy=%2211%22 r=%223.2%22 fill=%22%23eb6834%22/%3E%3Ccircle cx=%2213%22 cy=%2218%22 r=%223.6%22 fill=%22%231baf7a%22/%3E%3C/svg%3E" />
+    <link rel="alternate icon" type="image/png" href="favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+    />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="strip">
+        <a class="wordmark" href="?" aria-label="repo-atlas home">
+          <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+            <circle
+              cx="13"
+              cy="13"
+              r="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <circle cx="9" cy="10" r="5" fill="var(--series-1)" />
+            <circle cx="17.5" cy="11" r="3.2" fill="var(--series-2)" />
+            <circle cx="13" cy="18" r="3.6" fill="var(--series-3)" />
+          </svg>
+          repo-atlas
+        </a>
+        <form class="survey" id="survey" autocomplete="off">
+          <label class="field" for="login"
+            ><span>github.com/</span
+            ><input
+              id="login"
+              name="login"
+              placeholder="username"
+              spellcheck="false"
+              autocapitalize="off"
+              required
+          /></label>
+          <button class="btn" id="go" type="submit">Survey</button>
+        </form>
+      </header>
+
+      <div class="plate" id="plate">
+        <img id="avatar" alt="" hidden />
+        <p class="eyebrow">Atlas of</p>
+        <h1><a id="who" href="#" target="_blank" rel="noopener">@…</a></h1>
+        <div class="stats" id="stats"></div>
+      </div>
+
+      <div id="notice"></div>
+
+      <main id="main">
+        <section aria-labelledby="h-map">
+          <div class="sec-head">
+            <h2 id="h-map">The map</h2>
+            <p>
+              Each region is a group of repos that share topics. Disc area
+              follows stars. Dashed rings mark repos that need attention.
+            </p>
+          </div>
+          <div class="atlas">
+            <div>
+              <div class="mapbox" id="map"></div>
+              <div class="maplegend" aria-hidden="true">
+                <span><i class="key-disc"></i>one repo, area ∝ stars</span>
+                <span><i class="key-ring"></i>popular but stale</span>
+              </div>
+            </div>
+            <aside class="legend" id="legend" aria-label="Groups"></aside>
+          </div>
+        </section>
+
+        <section aria-labelledby="h-att">
+          <div class="sec-head">
+            <h2 id="h-att">Needs attention</h2>
+            <p id="att-why"></p>
+          </div>
+          <div class="att" id="att"></div>
+        </section>
+
+        <section aria-labelledby="h-tl">
+          <div class="sec-head">
+            <h2 id="h-tl">Stars over time</h2>
+            <p id="tl-why"></p>
+          </div>
+          <div class="chartbox">
+            <div class="tl-legend" id="tl-legend"></div>
+            <div id="timeline" style="position: relative"></div>
+          </div>
+          <div class="tl-tools">
+            <button class="btn ghost" id="history" type="button">
+              Load star history
+            </button>
+            <span class="progress" id="progress" aria-live="polite"></span>
+          </div>
+          <details class="token" id="token-box">
+            <summary>GitHub token</summary>
+            <div class="row">
+              <label class="field" for="token"
+                ><span>token</span
+                ><input
+                  id="token"
+                  type="password"
+                  placeholder="ghp_… or github_pat_…"
+                  spellcheck="false"
+              /></label>
+              <button class="btn ghost" id="token-save" type="button">
+                Use token
+              </button>
+            </div>
+            <p>
+              GitHub only shows when each star was given to signed-in callers,
+              so the real star history needs a token. A fine-grained token with
+              no permissions is enough; it only reads public data. It stays in
+              this browser tab and is sent to api.github.com only. It also lifts
+              the rate limit from 60 to 5,000 requests an hour.
+            </p>
+          </details>
+        </section>
+
+        <section aria-labelledby="h-share">
+          <div class="sec-head">
+            <h2 id="h-share">Share</h2>
+            <p>
+              A card sized for social posts, and a permalink for this atlas.
+            </p>
+          </div>
+          <div class="share">
+            <canvas
+              id="card"
+              width="1200"
+              height="630"
+              role="img"
+              aria-label="Share card preview"
+            ></canvas>
+            <div class="share-side">
+              <div class="linkbox" id="permalink"></div>
+              <div class="btns">
+                <button class="btn" id="dl" type="button">Download card</button>
+                <button class="btn ghost" id="copy" type="button">
+                  Copy link
+                </button>
+              </div>
+              <div class="toast" id="toast" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="method">
+        <div>
+          <h3>Groups</h3>
+          <p>
+            Topics are split into words, weighted by how rare they are across
+            the account, and compared repo to repo. Repos that stay similar
+            enough are merged (average linkage, cut at 0.16). The eight biggest
+            groups by stars get a color; the rest fold into <i>loners</i>.
+          </p>
+        </div>
+        <div>
+          <h3>Needs attention</h3>
+          <p>
+            A repo is popular when its stars reach the account's top fifth (and
+            at least 10). It is flagged when it is also idle for over a year,
+            archived, or built on a stack few people start with today, such as
+            jQuery or AngularJS.
+          </p>
+        </div>
+        <div>
+          <h3>Stars over time</h3>
+          <p>
+            Without a token the chart shows stars held today, by the year each
+            repo was born. With a token it reads stargazer dates: every page for
+            small repos, and five evenly spaced pages for big ones, interpolated
+            in between.
+          </p>
+        </div>
+        <div>
+          <h3>Source</h3>
+          <p>
+            Public GitHub REST API, read from your browser. Forks are left out.
+            <a
+              href="https://github.com/evoluteur/repo-atlas"
+              target="_blank"
+              rel="noopener"
+              >Code on GitHub</a
+            >.
+          </p>
+        </div>
+      </footer>
+
+      <footer class="credits">
+        <p>
+          Had fun browsing the app?
+          <a href="https://github.com/sponsors/evoluteur" target="_blank" rel="noopener"
+            >Buy me a coffee by becoming a sponsor</a
+          >.
+        </p>
+        <p>
+          You may also like
+          <a href="https://evoluteur.github.io/meet-the-fans/" target="_blank" rel="noopener"
+            >Meet the Fans</a
+          >,
+          <a href="https://evoluteur.github.io/github-projects-cards/" target="_blank" rel="noopener"
+            >GitHub Projects Cards</a
+          >, and
+          <a href="https://evoluteur.github.io/npm-pulse/" target="_blank" rel="noopener"
+            >npm Pulse</a
+          >.
+        </p>
+        <p>
+          &#169; 2026
+          <a href="https://evoluteur.github.io/" target="_blank" rel="noopener"
+            >Olivier Giulieri</a
+          >
+        </p>
+      </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script src="src/atlas.js"></script>
+    <script src="src/github.js"></script>
+    <script src="src/charts.js"></script>
+    <script src="src/card.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>
