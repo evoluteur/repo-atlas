@@ -177,10 +177,17 @@ g.region, a.leaf { transition: opacity .15s; }
 .lg-row .sw { width: 12px; height: 12px; border-radius: 3px; }
 .lg-name { font: 600 16px/1.15 var(--f-display); letter-spacing: .04em; text-transform: uppercase; overflow-wrap: anywhere; }
 .lg-num { font: 500 13px var(--f-data); font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+.lg-num .star { font-size: 1.6em; line-height: 1; margin-left: 2px; vertical-align: -0.1em; }
 .lg-sub { grid-column: 2 / -1; display: flex; align-items: center; gap: 8px; font: 12px var(--f-data); color: var(--muted); }
 .lg-bar { flex: 1; height: 4px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
 .lg-bar i { display: block; height: 100%; border-radius: 2px; }
 .lg-repos { grid-column: 2 / -1; font: 12px/1.5 var(--f-data); color: var(--muted); overflow-wrap: anywhere; }
+.lg-more {
+  font: 600 12px var(--f-data); color: var(--focus); background: none; border: 0; padding: 0 2px; margin: 0;
+  cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; white-space: nowrap;
+}
+.lg-more:hover { text-decoration-style: solid; }
+.lg-more:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 2px; }
 
 /* attention */
 .att { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px; }

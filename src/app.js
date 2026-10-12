@@ -158,13 +158,17 @@
     const max = Math.max(1, ...model.clusters.map((c) => c.stars));
     const rows = model.clusters.map((c) => {
       const col = Charts.colorOf(c);
-      const names = c.repos.slice(0, 4).map((r) => r.name).join(', ') + (c.repos.length > 4 ? ` +${c.repos.length - 4}` : '');
+      const SHOWN = 4, extra = c.repos.length - SHOWN;
+      const list = (rs) => esc(rs.map((r) => r.name).join(', '));
+      const names = extra > 0
+        ? `${list(c.repos.slice(0, SHOWN))}<span class="lg-rest" hidden>, ${list(c.repos.slice(SHOWN))}</span> <button class="lg-more" type="button" aria-expanded="false" title="Show all ${c.repos.length} repos">+${extra}</button>`
+        : list(c.repos);
       return `<div class="lg-row" data-id="${c.id}" tabindex="0">
         <i class="sw" style="background:${col}"></i>
         <span class="lg-name">${esc(c.label)}</span>
-        <span class="lg-num">${fmt(c.stars)}★</span>
+        <span class="lg-num">${fmt(c.stars)}<span class="star" aria-label="stars">★</span></span>
         <span class="lg-sub"><span class="lg-bar"><i style="width:${(100 * c.stars) / max}%;background:${col}"></i></span>${c.repos.length} repo${c.repos.length === 1 ? '' : 's'}</span>
-        <span class="lg-repos">${esc(names)}</span>
+        <span class="lg-repos">${names}</span>
       </div>`;
     }).join('');
     const el = $('legend');
@@ -174,6 +178,17 @@
       const off = () => Charts.focusRegion($('map'), null);
       row.addEventListener('pointerenter', on); row.addEventListener('pointerleave', off);
       row.addEventListener('focus', on); row.addEventListener('blur', off);
+      const more = row.querySelector('.lg-more');
+      if (more) {
+        const label = more.textContent, title = more.title;
+        more.addEventListener('click', () => {
+          const open = more.getAttribute('aria-expanded') !== 'true';
+          row.querySelector('.lg-rest').hidden = !open;
+          more.setAttribute('aria-expanded', String(open));
+          more.textContent = open ? 'less' : label;
+          more.title = open ? 'Show fewer repos' : title;
+        });
+      }
     });
   }
 
