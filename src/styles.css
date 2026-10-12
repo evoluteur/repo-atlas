@@ -258,6 +258,7 @@ details.token p { margin: 8px 0 0; max-width: 70ch; font-size: 14.5px; }
 }
 .tip b { font: 600 15px var(--f-display); letter-spacing: .03em; }
 .tip-meta { font: 11.5px var(--f-data); opacity: .8; }
+.tip .star { font-size: 1.6em; line-height: 1; margin-left: 1px; vertical-align: -0.1em; }
 .tip-desc { opacity: .92; }
 .tip-cl, .tip-row { display: flex; align-items: center; gap: 6px; font: 11.5px var(--f-data); }
 .tip-row b { margin-left: auto; font: 600 11.5px var(--f-data); padding-left: 12px; }

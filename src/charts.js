@@ -25,12 +25,13 @@
   }
 
   const labelSize = (r) => Math.max(9.5, Math.min(13, r / 3.4));
+  const STAR = '<span class="star" aria-label="stars">★</span>';
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function repoTip(r, c) {
     const reasons = r.flagReasons && r.flagReasons.length
       ? '<ul class="tip-flags">' + r.flagReasons.map((x) => '<li>' + esc(x.text) + '</li>').join('') + '</ul>' : '';
-    return `<b>${esc(r.name)}</b><span class="tip-meta">${fmt(r.stars)}★ · ${fmt(r.forks)} forks · pushed ${esc(r.pushed)}</span>`
+    return `<b>${esc(r.name)}</b><span class="tip-meta">${fmt(r.stars)}${STAR} · ${fmt(r.forks)} forks · pushed ${esc(r.pushed)}</span>`
       + (r.description ? `<span class="tip-desc">${esc(r.description)}</span>` : '')
       + `<span class="tip-cl"><i style="background:${colorOf(c)}"></i>${esc(c.label)}</span>` + reasons;
   }
@@ -191,7 +192,7 @@
           .map((k) => `<span class="tip-row"><i style="background:${colorOf(byId[k])}"></i>${esc(byId[k].label)}<b>${fmt(d[k])}</b></span>`).join('');
         const born = model.repos.filter((r) => +r.created.slice(0, 4) === d.year).length;
         const [px, py] = d3.pointer(e, host);
-        tip.show(`<b>${d.year}</b><span class="tip-meta">${born} repo${born === 1 ? '' : 's'} born · ${fmt(total)}★ today</span>${parts}`, px, py);
+        tip.show(`<b>${d.year}</b><span class="tip-meta">${born} repo${born === 1 ? '' : 's'} born · ${fmt(total)}${STAR} today</span>${parts}`, px, py);
       })
       .on('pointerleave', () => tip.hide());
   }
@@ -230,7 +231,7 @@
         const parts = keys.filter((k) => d[k] > 0).sort((a, b) => d[b] - d[a]).slice(0, 6)
           .map((k) => `<span class="tip-row"><i style="background:${colorOf(byId[k])}"></i>${esc(byId[k].label)}<b>${fmt(d[k])}</b></span>`).join('');
         const [hx, hy] = d3.pointer(e, host);
-        tip.show(`<b>${d3.utcFormat('%b %Y')(d.t)}</b><span class="tip-meta">${fmt(total)}★ in total</span>${parts}`, hx, hy);
+        tip.show(`<b>${d3.utcFormat('%b %Y')(d.t)}</b><span class="tip-meta">${fmt(total)}${STAR} in total</span>${parts}`, hx, hy);
       })
       .on('pointerleave', () => { tip.hide(); rule.attr('hidden', true); });
   }
