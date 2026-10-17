@@ -19,6 +19,12 @@
   };
   const token = () => store.get('ra:token', true) || '';
 
+  // the GitHub user last looked at, shared with GitHub-Projects-Cards and
+  // npm-Pulse (same site, same localStorage, plain string)
+  const SHARED_USER_KEY = 'evoluteur-github-user';
+  const storedLogin = () => { try { return localStorage.getItem(SHARED_USER_KEY) || ''; } catch (e) { return ''; } };
+  const rememberLogin = (login) => { try { localStorage.setItem(SHARED_USER_KEY, login); } catch (e) { /* blocked */ } };
+
   function permalink(login) {
     const onSite = /^https?:$/.test(location.protocol) && (/github\.io$/.test(location.hostname) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname));
     const base = onSite ? location.origin + location.pathname : HOME;
@@ -69,6 +75,7 @@
       const pts = store.get('ra:stars:' + login.toLowerCase());
       if (pts && Date.now() - pts.at < 24 * CACHE_MS) state.points = pts.points;
       render();
+      rememberLogin(state.user.login || login);
     } catch (err) {
       showFailure(login, err);
     } finally {
@@ -300,5 +307,5 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw); } catch (e) { /* old browsers */ }
   new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-  survey(readLoginFromUrl() || DEFAULT_LOGIN);
+  survey(readLoginFromUrl() || storedLogin() || DEFAULT_LOGIN);
 })();
