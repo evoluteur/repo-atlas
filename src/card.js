@@ -4,7 +4,7 @@
 
   // The card always uses the light plate so it reads the same wherever it is posted.
   const P = {
-    paper: '#f3f5f7', ink: '#16202b', ink2: '#3c4a58', muted: '#5d6b79', line: '#d5dde5', critical: '#c2334b',
+    paper: '#f3f5f7', ink: '#16202b', ink2: '#3c4a58', muted: '#5d6b79', line: '#d5dde5',
     series: ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#6250d6', '#e34948'], other: '#a7b1bb'
   };
   const color = (c) => (c.other ? P.other : P.series[c.slot % P.series.length]);
@@ -42,10 +42,6 @@
       ctx.strokeStyle = color(c); ctx.lineWidth = 1.25; ctx.stroke(); ctx.globalAlpha = 1;
       (cn.children || []).forEach((ln) => {
         const x = dx + (ln.x - (layout.ox || 0)) * s, y = dy + (ln.y - (layout.oy || 0)) * s, r = Math.max(ln.r * s, 1.8);
-        if (ln.data.repo.flag) {
-          ctx.save(); ctx.setLineDash([3, 2.5]); ctx.strokeStyle = P.critical; ctx.lineWidth = 1.75;
-          ctx.beginPath(); ctx.arc(x, y, r + 3.5, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
-        }
         ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
         ctx.fillStyle = color(c); ctx.fill(); ctx.strokeStyle = P.paper; ctx.lineWidth = 1.2; ctx.stroke();
       });
@@ -75,22 +71,6 @@
       ctx.fillStyle = color(c);
       ctx.beginPath(); ctx.roundRect ? ctx.roundRect(L, y + 22, Math.max(4, (cw * c.stars) / maxS), 7, 2) : ctx.rect(L, y + 22, Math.max(4, (cw * c.stars) / maxS), 7); ctx.fill();
     });
-
-    // needs attention
-    const flagged = model.attention.flagged.slice(0, 3);
-    if (flagged.length) {
-      const y0 = 432;
-      ctx.fillStyle = P.critical; ctx.font = `600 13px ${F.data}`;
-      ctx.fillText(`NEEDS ATTENTION · ${model.attention.flagged.length}`, L, y0);
-      flagged.forEach((f, i) => {
-        const y = y0 + 30 + i * 30;
-        ctx.fillStyle = P.ink; ctx.font = `600 20px ${F.display}`;
-        const name = fit(ctx, f.repo.name, 250); ctx.fillText(name, L, y);
-        const nw = ctx.measureText(name).width;
-        ctx.fillStyle = P.muted; ctx.font = `400 16px ${F.body}`;
-        ctx.fillText(fit(ctx, `${f.repo.stars}★ · ${f.reasons[0].text.charAt(0).toLowerCase() + f.reasons[0].text.slice(1)}`, cw - nw - 14), L + nw + 12, y);
-      });
-    }
 
     ctx.fillStyle = P.muted; ctx.font = `400 14px ${F.data}`;
     ctx.fillText(fit(ctx, url.replace(/^https?:\/\//, ''), cw), L, H - 40);

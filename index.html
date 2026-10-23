@@ -22,11 +22,11 @@
     <link rel="canonical" href="https://evoluteur.github.io/repo-atlas/" />
     <meta
       name="description"
-      content="Type a GitHub username, get the map of what they've actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged."
+      content="Type a GitHub username, get the map of what they've actually built: repos clustered by topic, and stars over time."
     />
     <meta
       name="keywords"
-      content="github, repositories, repos, portfolio, map, clustering, topics, stars, stargazers, star history, stale repos, github api, d3, visualization, developer tools, open source"
+      content="github, repositories, repos, portfolio, map, clustering, topics, stars, stargazers, star history, github api, d3, visualization, developer tools, open source"
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Olivier Giulieri" />
@@ -37,13 +37,13 @@
     <meta property="og:title" content="repo-atlas" />
     <meta
       property="og:description"
-      content="The map of what a GitHub user has actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged."
+      content="The map of what a GitHub user has actually built: repos clustered by topic, and stars over time."
     />
     <meta property="og:url" content="https://evoluteur.github.io/repo-atlas/" />
     <meta property="og:image" content="https://evoluteur.github.io/repo-atlas/repo-atlas.png" />
     <meta property="og:image:width" content="2400" />
     <meta property="og:image:height" content="1260" />
-    <meta property="og:image:alt" content="repo-atlas map of a GitHub account: repos grouped by topic as colored circles, with the ones needing attention listed" />
+    <meta property="og:image:alt" content="repo-atlas map of a GitHub account: repos grouped by topic as colored circles" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="repo-atlas" />
     <meta
@@ -56,7 +56,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "repo-atlas",
-        "description": "Type a GitHub username, get the map of what they’ve actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged.",
+        "description": "Type a GitHub username, get the map of what they’ve actually built: repos clustered by topic, and stars over time.",
         "url": "https://evoluteur.github.io/repo-atlas/",
         "image": "https://evoluteur.github.io/repo-atlas/repo-atlas.png",
         "applicationCategory": "DeveloperApplication",
@@ -131,7 +131,7 @@
             <h2 id="h-map">The map</h2>
             <p>
               Each region is a group of repos that share topics. Disc area
-              follows stars. Dashed rings mark repos that need attention.
+              follows stars.
             </p>
           </div>
           <div class="atlas">
@@ -139,19 +139,10 @@
               <div class="mapbox" id="map"></div>
               <div class="maplegend" aria-hidden="true">
                 <span><i class="key-disc"></i>one repo, area ∝ stars</span>
-                <span><i class="key-ring"></i>popular but stale</span>
               </div>
             </div>
             <aside class="legend" id="legend" aria-label="Groups"></aside>
           </div>
-        </section>
-
-        <section aria-labelledby="h-att">
-          <div class="sec-head">
-            <h2 id="h-att">Needs attention</h2>
-            <p id="att-why"></p>
-          </div>
-          <div class="att" id="att"></div>
         </section>
 
         <section aria-labelledby="h-tl">
@@ -231,15 +222,6 @@
             the account, and compared repo to repo. Repos that stay similar
             enough are merged (average linkage, cut at 0.16). The eight biggest
             groups by stars get a color; the rest fold into <i>loners</i>.
-          </p>
-        </div>
-        <div>
-          <h3>Needs attention</h3>
-          <p>
-            A repo is popular when its stars reach the account's top fifth (and
-            at least 10). It is flagged when it is also idle for over a year,
-            archived, or built on a stack few people start with today, such as
-            jQuery or AngularJS.
           </p>
         </div>
         <div>

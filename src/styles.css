@@ -1,5 +1,5 @@
 /* Layout: an atlas plate. Header strip, title block, then map + legend side by side,
-   then the attention list, the timeline, and the share card. */
+   then the timeline, and the share card. */
 :root {
   --paper: #f3f5f7;
   --surface: #ffffff;
@@ -149,7 +149,6 @@ section + section { margin-top: 54px; }
 .mapbox svg, .chartbox svg { display: block; max-width: 100%; height: auto; overflow: visible; }
 .rim { font: 600 12.5px var(--f-display); letter-spacing: .16em; }
 .leaf-label { font-family: var(--f-data); font-weight: 500; pointer-events: none; }
-.flag-mark { font: 700 15px var(--f-data); pointer-events: none; }
 a.leaf { cursor: pointer; }
 a.leaf circle { transition: opacity .15s; }
 a.leaf.hot circle:last-of-type { stroke: var(--ink); }
@@ -163,7 +162,6 @@ g.region, a.leaf { transition: opacity .15s; }
 }
 .maplegend span { display: inline-flex; align-items: center; gap: 7px; }
 .key-disc { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); display: inline-block; }
-.key-ring { width: 14px; height: 14px; border-radius: 50%; border: 1.75px dashed var(--critical); display: inline-block; }
 
 /* legend table */
 .legend { display: flex; flex-direction: column; gap: 0; }
@@ -188,27 +186,6 @@ g.region, a.leaf { transition: opacity .15s; }
 }
 .lg-more:hover { text-decoration-style: solid; }
 .lg-more:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 2px; }
-
-/* attention */
-.att { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px; }
-.att-card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
-}
-.att-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.att-name { font: 700 22px/1.1 var(--f-display); letter-spacing: .02em; text-decoration: none; overflow-wrap: anywhere; min-width: 0; }
-.att-name:hover { text-decoration: underline; }
-.att-stars { font: 600 14px var(--f-data); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.att-desc { margin: 0; color: var(--ink-2); font-size: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
-.chip {
-  font: 500 11.5px var(--f-data); padding: 3px 8px; border-radius: 3px; background: var(--surface-2); color: var(--ink-2);
-  display: inline-flex; align-items: center; gap: 5px;
-}
-.chip.idle, .chip.stack, .chip.archived { background: var(--critical-soft); color: var(--critical); }
-.chip.idle::before, .chip.stack::before, .chip.archived::before { content: "!"; font-weight: 700; }
-.att-meta { font: 12px var(--f-data); color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: auto; padding-top: 6px; border-top: 1px dashed var(--line); }
-.att-empty { color: var(--muted); font-style: italic; margin: 0; }
 
 /* timeline */
 .tl-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 10px; padding: 0 2px; font: 12px var(--f-data); color: var(--ink-2); }
@@ -263,8 +240,6 @@ details.token p { margin: 8px 0 0; max-width: 70ch; font-size: 14.5px; }
 .tip-cl, .tip-row { display: flex; align-items: center; gap: 6px; font: 11.5px var(--f-data); }
 .tip-row b { margin-left: auto; font: 600 11.5px var(--f-data); padding-left: 12px; }
 .tip-cl i, .tip-row i { width: 9px; height: 9px; border-radius: 2px; flex: none; }
-.tip-flags { margin: 2px 0 0; padding: 0; list-style: none; font: 600 11.5px var(--f-data); }
-.tip-flags li::before { content: "! "; font-weight: 700; }
 
 .loading .mapbox, .loading .chartbox { opacity: .45; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

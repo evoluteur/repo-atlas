@@ -67,20 +67,6 @@ test('the Evolutility family lands in one group', () => {
   assert.equal(ids.size, 1);
 });
 
-test('the jQuery widgets get flagged for their stack', () => {
-  const { flagged } = A.attention(repos().filter((x) => !x.fork), { now: NOW });
-  const by = Object.fromEntries(flagged.map((f) => [f.repo.name, f.reasons.map((r) => r.kind)]));
-  assert.ok(by.colorpicker.includes('stack'));
-  assert.ok(by['structured-filter'].includes('stack'));
-  assert.ok(by['evolutility-ui-jquery'].includes('idle'));
-  assert.equal(by['meet-the-fans'], undefined); // popular but freshly pushed, modern stack
-});
-
-test('small repos are never flagged however old', () => {
-  const { flagged } = A.attention(repos().filter((x) => !x.fork), { now: NOW });
-  assert.ok(flagged.every((f) => f.repo.stars >= 10));
-});
-
 test('samplePages keeps first and last page and stays within budget', () => {
   assert.deepEqual(A.samplePages(250), [1, 2, 3]);
   const p = A.samplePages(3000, 100, 5);

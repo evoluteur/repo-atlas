@@ -1,7 +1,7 @@
 {
   "name": "repo-atlas",
   "version": "0.1.0",
-  "description": "Type a GitHub username, get the map of what they've actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged.",
+  "description": "Type a GitHub username, get the map of what they've actually built: repos clustered by topic, and stars over time.",
   "private": true,
   "license": "MIT",
   "author": "Olivier Giulieri",
@@ -21,8 +21,6 @@
     "stars",
     "star-history",
     "stargazers",
-    "stale-repos",
-    "tech-debt",
     "d3",
     "visualization",
     "developer-tools",

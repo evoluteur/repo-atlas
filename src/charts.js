@@ -29,16 +29,14 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function repoTip(r, c) {
-    const reasons = r.flagReasons && r.flagReasons.length
-      ? '<ul class="tip-flags">' + r.flagReasons.map((x) => '<li>' + esc(x.text) + '</li>').join('') + '</ul>' : '';
     return `<b>${esc(r.name)}</b><span class="tip-meta">${fmt(r.stars)}${STAR} · ${fmt(r.forks)} forks · pushed ${esc(r.pushed)}</span>`
       + (r.description ? `<span class="tip-desc">${esc(r.description)}</span>` : '')
-      + `<span class="tip-cl"><i style="background:${colorOf(c)}"></i>${esc(c.label)}</span>` + reasons;
+      + `<span class="tip-cl"><i style="background:${colorOf(c)}"></i>${esc(c.label)}</span>`;
   }
 
   /**
    * The atlas map: a circle pack, one region per cluster, one disc per repo
-   * (area ∝ stars + 1). Flagged repos wear a dashed ring.
+   * (area ∝ stars + 1).
    * Returns the layout so the share card can redraw it.
    */
   function drawMap(host, model, { login, onPick } = {}) {
@@ -72,11 +70,6 @@
       .attr('aria-label', (d) => `${d.data.repo.name}, ${d.data.repo.stars} stars`)
       .attr('class', 'leaf');
 
-    leaves.filter((d) => d.data.repo.flag).append('circle')
-      .attr('cx', (d) => d.x).attr('cy', (d) => d.y).attr('r', (d) => d.r + 3.5)
-      .attr('fill', 'none').attr('stroke', css('--critical')).attr('stroke-width', 1.75)
-      .attr('stroke-dasharray', '3 2.5');
-
     leaves.append('circle')
       .attr('cx', (d) => d.x).attr('cy', (d) => d.y).attr('r', (d) => Math.max(d.r, 2.5))
       .attr('fill', (d) => colorOf(d.data.cluster))
@@ -92,12 +85,6 @@
         const n = d.data.repo.name, max = Math.floor((d.r * 1.8) / (labelSize(d.r) * 0.6));
         return n.length > max ? n.slice(0, Math.max(3, max - 1)) + '…' : n;
       });
-
-    leaves.filter((d) => d.data.repo.flag).append('text')
-      .attr('class', 'flag-mark').attr('x', (d) => d.x + d.r * 0.72).attr('y', (d) => d.y - d.r * 0.72)
-      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-      .attr('fill', css('--critical')).attr('stroke', css('--surface')).attr('stroke-width', 3).attr('paint-order', 'stroke')
-      .text('!');
 
     // Region names lettered along the inside of the rim, the way a map names a basin.
     const defs = svg.append('defs');

@@ -124,14 +124,11 @@
   /* ---------- rendering ---------- */
   function render() {
     const model = Atlas.summarize(state.all, { includeForks: state.includeForks });
-    const reasons = new Map(model.attention.flagged.map((f) => [f.repo.name, f.reasons]));
-    model.repos.forEach((r) => { r.flagReasons = reasons.get(r.name) || null; });
     state.model = model;
     document.title = 'repo-atlas · @' + state.user.login;
     renderPlate(model);
     renderMap();
     renderLegend(model);
-    renderAttention(model);
     renderTimeline();
     renderShare();
   }
@@ -197,23 +194,6 @@
         });
       }
     });
-  }
-
-  function renderAttention(model) {
-    const { bar, flagged } = model.attention;
-    $('att-why').textContent = `Repos with ${bar}+ stars that have gone quiet or sit on an old stack. Start here.`;
-    const login = state.user.login;
-    $('att').innerHTML = flagged.length ? flagged.map(({ repo: r, reasons }) => `
-      <article class="att-card">
-        <div class="att-top">
-          <a class="att-name" href="https://github.com/${esc(login)}/${esc(r.name)}" target="_blank" rel="noopener">${esc(r.name)}</a>
-          <span class="att-stars">${fmt(r.stars)}★</span>
-        </div>
-        ${r.description ? `<p class="att-desc">${esc(r.description)}</p>` : ''}
-        <ul class="chips">${reasons.map((x) => `<li class="chip ${x.kind}">${esc(x.text)}</li>`).join('')}</ul>
-        <div class="att-meta"><span>${fmt(r.forks)} forks</span><span>born ${esc(r.created.slice(0, 4))}</span><span>last push ${esc(r.pushed)}</span>${r.language ? `<span>${esc(r.language)}</span>` : ''}</div>
-      </article>`).join('')
-      : `<p class="att-empty">Nothing popular has gone quiet. Every repo with ${bar}+ stars was pushed in the last year and none sit on a legacy stack.</p>`;
   }
 
   function renderTimeline() {

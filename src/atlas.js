@@ -1,11 +1,9 @@
 /* repo-atlas · analysis core
  * Pure functions, no DOM, no network. Runs in the browser (window.Atlas)
- * and in Node (require) so the clustering and flags can be tested.
+ * and in Node (require) so the clustering and timelines can be tested.
  */
 (function (root) {
   'use strict';
-
-  const DAY = 864e5;
 
   // Topics that say nothing about what a repo is *about*.
   const STOP = new Set([
@@ -18,21 +16,6 @@
   // Hyphen parts we never split out on their own.
   const PART_STOP = new Set(['with', 'from', 'for', 'and', 'the', 'based', 'api', 'app', 'apps', 'view', 'views', 'tool', 'tools', 'maker', 'gen', 'files', 'file', 'free']);
   const WORD_STOP = new Set(['with', 'from', 'that', 'this', 'your', 'their', 'into', 'like', 'using', 'used', 'over', 'each', 'them', 'they', 'what', 'when', 'which', 'then', 'than', 'also', 'just', 'more', 'most', 'some', 'very', 'make', 'made', 'simple', 'page', 'pages', 'web', 'online', 'free', 'build', 'built', 'based', 'small', 'light', 'lightweight', 'easy', 'only', 'other', 'both', 'between', 'about', 'download']);
-
-  // Stacks a 2026 newcomer would not start a project on. Matched against topics + description.
-  const LEGACY = [
-    { re: /\bjquery(-ui|-plugin)?\b|jquery ui/i, label: 'jQuery' },
-    { re: /\bangularjs\b|angular\.js|\bangular-1\b/i, label: 'AngularJS' },
-    { re: /\bbackbone(js|\.js)?\b/i, label: 'Backbone' },
-    { re: /\bbower\b/i, label: 'Bower' },
-    { re: /\bcoffee-?script\b/i, label: 'CoffeeScript' },
-    { re: /\bgrunt\b/i, label: 'Grunt' },
-    { re: /\bprototype-?js\b|\bmootools\b/i, label: 'Prototype/MooTools' },
-    { re: /\bd3v[1-4]\b/i, label: 'old D3' },
-    { re: /\bwebforms\b|asp\.net webforms/i, label: 'WebForms' },
-    { re: /\bflash\b|actionscript/i, label: 'Flash' },
-    { re: /\bpython2\b/i, label: 'Python 2' }
-  ];
 
   // Tokens that only came from splitting a hyphenated topic. They help similarity
   // but make poor labels ("sacred · geometry" instead of "sacred geometry").
@@ -184,52 +167,6 @@
     return out;
   }
 
-  function quantile(sorted, q) {
-    if (!sorted.length) return 0;
-    const pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);
-    return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
-  }
-
-  /**
-   * "Needs attention": repos people clearly wanted (high stars) that are
-   * either untouched for a long time or sitting on a stack nobody starts with now.
-   */
-  function attention(repos, { now = new Date(), staleDays = 365, minStars = 10, popularQuantile = 0.8 } = {}) {
-    const starred = repos.map((r) => r.stars).filter((s) => s > 0).sort((a, b) => a - b);
-    const bar = Math.max(minStars, Math.round(quantile(starred, popularQuantile)));
-    const t = +now;
-    const flagged = [];
-    for (const r of repos) {
-      if (r.fork) continue;
-      const idle = Math.floor((t - Date.parse(r.pushed)) / DAY);
-      const age = (t - Date.parse(r.created)) / (365.25 * DAY);
-      const hay = r.name.replace(/-/g, ' ') + ' ' + r.topics.join(' ') + ' ' + r.description;
-      const legacy = LEGACY.filter((l) => l.re.test(hay)).map((l) => l.label);
-      const reasons = [];
-      if (idle > staleDays) reasons.push({ kind: 'idle', text: 'No push in ' + humanDays(idle) });
-      if (legacy.length) reasons.push({ kind: 'stack', text: 'Built on ' + legacy.join(', ') });
-      if (r.archived) reasons.push({ kind: 'archived', text: 'Archived' });
-      r.idleDays = idle; r.ageYears = age; r.legacy = legacy;
-      r.popular = r.stars >= bar;
-      if (r.popular && reasons.length) {
-        if (r.forks >= 15 && r.forks / Math.max(r.stars, 1) >= 0.25) {
-          reasons.push({ kind: 'forks', text: r.forks + ' forks may hold fixes' });
-        }
-        r.flag = true;
-        flagged.push({ repo: r, reasons, score: r.stars * (1 + Math.min(idle, 3650) / 365) * (legacy.length ? 1.5 : 1) });
-      } else r.flag = false;
-    }
-    flagged.sort((a, b) => b.repo.stars - a.repo.stars || b.score - a.score);
-    return { bar, flagged };
-  }
-
-  function humanDays(d) {
-    if (d >= 730) return Math.floor(d / 365.25) + ' years';
-    if (d >= 365) return 'over a year';
-    if (d >= 60) return Math.round(d / 30.4) + ' months';
-    return d + ' days';
-  }
-
   /** Stars held today, stacked by the year each repo was created. Works without a token. */
   function starsByBirthYear(clusters) {
     const years = new Map();
@@ -313,13 +250,12 @@
   function summarize(all, { includeForks = false } = {}) {
     const repos = all.filter((r) => includeForks || !r.fork);
     const clusters = cluster(repos);
-    const att = attention(repos);
     const stars = repos.reduce((s, r) => s + r.stars, 0);
     const span = repos.length ? [repos.reduce((m, r) => (r.created < m ? r.created : m), '9999'), repos.reduce((m, r) => (r.pushed > m ? r.pushed : m), '0000')] : null;
-    return { repos, clusters, attention: att, stars, span, forksHidden: all.length - repos.length };
+    return { repos, clusters, stars, span, forksHidden: all.length - repos.length };
   }
 
-  const api = { normalize, tokensFor, vectorize, cosine, cluster, attention, starsByBirthYear, starsOverTime, samplePages, summarize, humanDays, quantile };
+  const api = { normalize, tokensFor, vectorize, cosine, cluster, starsByBirthYear, starsOverTime, samplePages, summarize };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Atlas = api;
 })(typeof window !== 'undefined' ? window : globalThis);

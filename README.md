@@ -1,6 +1,6 @@
 # repo-atlas
 
-Type a GitHub username, get the map of what they've actually built: repos clustered by topic, stars over time, and the popular-but-stale ones flagged.
+Type a GitHub username, get the map of what they've actually built: repos clustered by topic, and stars over time.
 
 **Live:** https://evoluteur.github.io/repo-atlas/ · permalink per user: `?u=<username>`
 
@@ -10,7 +10,6 @@ Type a GitHub username, get the map of what they've actually built: repos cluste
 
 - **The map.** Every public repo as a disc (area ∝ stars), grouped into regions of repos that share topics. Hover for details, click to open the repo.
 - **Groups by stars.** The legend ranks the regions by the stars they hold, so you see where the attention actually sits.
-- **Needs attention.** Repos people clearly wanted (stars in the account's top fifth, and at least 10) that are idle for over a year, archived, or built on a stack few people start with today (jQuery, AngularJS, Backbone, Bower…). Heavily forked ones get a hint that the forks may hold fixes.
 - **Stars over time.** Without a token: stars held today, stacked by the year each repo was born. With a token: real cumulative star history per group, from stargazer dates.
 - **Share.** A 1200×630 card for social posts and a permalink.
 
@@ -27,7 +26,7 @@ All of this is in [`src/atlas.js`](src/atlas.js): pure functions, no DOM, tested
 
 Everything runs in the browser against the public GitHub REST API.
 
-- The map and the attention list work anonymously (60 requests/hour per IP; a typical account takes 2).
+- The map works anonymously (60 requests/hour per IP; a typical account takes 2).
 - GitHub only lists **when** each star was given to authenticated callers, so the star-history chart needs a token. A fine-grained token with no extra permissions is enough. It is kept in `sessionStorage` for the tab and only sent to `api.github.com`.
 - Big repos are sampled: every stargazer page for repos under 500 stars, otherwise the first, last and three evenly spaced pages. Each fetched star is an exact (count, date) point; months in between are interpolated.
 - Results are cached in `localStorage` (repos 1 hour, star history 24 hours).
@@ -44,7 +43,7 @@ open http://localhost:3000/?u=evoluteur
 ```
 
 ```sh
-npm test                # clustering, flags and timeline math
+npm test                # clustering and timeline math
 npm run build           # dist/repo-atlas.html: one self-contained file
 ```
 
@@ -52,7 +51,7 @@ npm run build           # dist/repo-atlas.html: one self-contained file
 
 ```
 index.html          page shell
-src/atlas.js        clustering, attention flags, timelines (pure, Node-testable)
+src/atlas.js        clustering, timelines (pure, Node-testable)
 src/github.js       REST client: repos, sampled stargazer pages
 src/charts.js       D3: circle-pack map, birth-year columns, stacked star history
 src/card.js         1200×630 share card on canvas
