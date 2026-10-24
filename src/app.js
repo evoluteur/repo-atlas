@@ -129,6 +129,7 @@
     renderPlate(model);
     renderMap();
     renderLegend(model);
+    renderHighlights(model);
     renderTimeline();
     renderShare();
   }
@@ -193,6 +194,32 @@
           more.title = open ? 'Show fewer repos' : title;
         });
       }
+    });
+  }
+
+  const safeUrl = (u) => (/^https?:\/\//i.test(u || '') ? u : '');
+
+  function renderHighlights(model) {
+    const login = state.user.login;
+    const el = $('hl');
+    el.innerHTML = model.highlights.map(({ repo: r, cluster: c }) => {
+      const demo = safeUrl(r.homepage);
+      return `
+      <article class="hl-card" data-id="${c.id}" style="--group:${Charts.colorOf(c)}">
+        <span class="hl-group"><i></i>${esc(c.label)}</span>
+        <div class="hl-top">
+          <a class="hl-name" href="https://github.com/${esc(login)}/${esc(r.name)}" target="_blank" rel="noopener">${esc(r.name)}</a>
+          <span class="hl-stars">${fmt(r.stars)}<span class="star" aria-label="stars">★</span></span>
+        </div>
+        ${r.description ? `<p class="hl-desc">${esc(r.description)}</p>` : ''}
+        <div class="hl-meta">${r.language ? `<span>${esc(r.language)}</span>` : ''}<span>${fmt(r.forks)} forks</span><span>born ${esc(r.created.slice(0, 4))}</span>${demo ? `<a href="${esc(demo)}" target="_blank" rel="noopener">live demo ↗</a>` : ''}</div>
+      </article>`;
+    }).join('');
+    el.querySelectorAll('.hl-card').forEach((card) => {
+      const on = () => Charts.focusRegion($('map'), card.dataset.id);
+      const off = () => Charts.focusRegion($('map'), null);
+      card.addEventListener('pointerenter', on); card.addEventListener('pointerleave', off);
+      card.addEventListener('focusin', on); card.addEventListener('focusout', off);
     });
   }
 

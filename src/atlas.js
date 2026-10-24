@@ -247,15 +247,28 @@
     return [...out].sort((a, b) => a - b);
   }
 
+  /**
+   * Highlights: the most-starred repo of each named group, in group order.
+   * An account with no groups gets its top repos instead.
+   */
+  function highlights(clusters, { fallback = 3 } = {}) {
+    const best = (rs) => rs.slice().sort((a, b) => b.stars - a.stars || (b.pushed > a.pushed ? 1 : b.pushed < a.pushed ? -1 : 0));
+    const named = clusters.filter((c) => !c.other && c.repos.length);
+    if (named.length) return named.map((c) => ({ repo: best(c.repos)[0], cluster: c }));
+    const other = clusters.find((c) => c.other);
+    return other ? best(other.repos).slice(0, fallback).map((repo) => ({ repo, cluster: other })) : [];
+  }
+
   function summarize(all, { includeForks = false } = {}) {
     const repos = all.filter((r) => includeForks || !r.fork);
     const clusters = cluster(repos);
+    const hl = highlights(clusters);
     const stars = repos.reduce((s, r) => s + r.stars, 0);
     const span = repos.length ? [repos.reduce((m, r) => (r.created < m ? r.created : m), '9999'), repos.reduce((m, r) => (r.pushed > m ? r.pushed : m), '0000')] : null;
-    return { repos, clusters, stars, span, forksHidden: all.length - repos.length };
+    return { repos, clusters, highlights: hl, stars, span, forksHidden: all.length - repos.length };
   }
 
-  const api = { normalize, tokensFor, vectorize, cosine, cluster, starsByBirthYear, starsOverTime, samplePages, summarize };
+  const api = { normalize, tokensFor, vectorize, cosine, cluster, highlights, starsByBirthYear, starsOverTime, samplePages, summarize };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Atlas = api;
 })(typeof window !== 'undefined' ? window : globalThis);

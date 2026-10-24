@@ -67,6 +67,23 @@ test('the Evolutility family lands in one group', () => {
   assert.equal(ids.size, 1);
 });
 
+test('highlights pick the top repo of every named group', () => {
+  const c = A.cluster(repos().filter((x) => !x.fork));
+  const hl = A.highlights(c);
+  const named = c.filter((g) => !g.other);
+  assert.equal(hl.length, named.length);
+  hl.forEach(({ repo, cluster }) => {
+    assert.ok(!cluster.other);
+    assert.equal(repo.stars, Math.max(...cluster.repos.map((x) => x.stars)));
+  });
+});
+
+test('highlights fall back to top loners when there are no groups', () => {
+  const other = { id: 'other', other: true, repos: [{ name: 'a', stars: 1, pushed: '2020-01-01' }, { name: 'b', stars: 9, pushed: '2020-01-01' }] };
+  assert.deepEqual(A.highlights([other]).map((h) => h.repo.name), ['b', 'a']);
+  assert.deepEqual(A.highlights([]), []);
+});
+
 test('samplePages keeps first and last page and stays within budget', () => {
   assert.deepEqual(A.samplePages(250), [1, 2, 3]);
   const p = A.samplePages(3000, 100, 5);

@@ -72,6 +72,23 @@
       ctx.beginPath(); ctx.roundRect ? ctx.roundRect(L, y + 22, Math.max(4, (cw * c.stars) / maxS), 7, 2) : ctx.rect(L, y + 22, Math.max(4, (cw * c.stars) / maxS), 7); ctx.fill();
     });
 
+    // highlights
+    const hl = model.highlights.slice(0, 3);
+    if (hl.length) {
+      const y0 = 432;
+      ctx.fillStyle = P.muted; ctx.font = `600 13px ${F.data}`;
+      ctx.fillText('HIGHLIGHTS', L, y0);
+      hl.forEach(({ repo: r, cluster: c }, i) => {
+        const y = y0 + 30 + i * 30;
+        ctx.fillStyle = color(c); ctx.fillRect(L, y - 12, 10, 10);
+        ctx.fillStyle = P.ink; ctx.font = `600 20px ${F.display}`;
+        const name = fit(ctx, r.name, 250); ctx.fillText(name, L + 18, y);
+        const nw = ctx.measureText(name).width;
+        ctx.fillStyle = P.muted; ctx.font = `400 16px ${F.body}`;
+        ctx.fillText(fit(ctx, `${r.stars.toLocaleString('en-US')}★ · ${c.label}`, cw - nw - 32), L + nw + 30, y);
+      });
+    }
+
     ctx.fillStyle = P.muted; ctx.font = `400 14px ${F.data}`;
     ctx.fillText(fit(ctx, url.replace(/^https?:\/\//, ''), cw), L, H - 40);
     return canvas;

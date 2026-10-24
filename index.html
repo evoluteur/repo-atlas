@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://evoluteur.github.io/repo-atlas/" />
     <meta
       name="description"
-      content="Type a GitHub username, get the map of what they've actually built: repos clustered by topic, and stars over time."
+      content="Type a GitHub username, get the map of what they've actually built: repos clustered by topic, the highlight of each group, and stars over time."
     />
     <meta
       name="keywords"
@@ -37,7 +37,7 @@
     <meta property="og:title" content="repo-atlas" />
     <meta
       property="og:description"
-      content="The map of what a GitHub user has actually built: repos clustered by topic, and stars over time."
+      content="The map of what a GitHub user has actually built: repos clustered by topic, the highlight of each group, and stars over time."
     />
     <meta property="og:url" content="https://evoluteur.github.io/repo-atlas/" />
     <meta property="og:image" content="https://evoluteur.github.io/repo-atlas/repo-atlas.png" />
@@ -56,7 +56,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "repo-atlas",
-        "description": "Type a GitHub username, get the map of what they’ve actually built: repos clustered by topic, and stars over time.",
+        "description": "Type a GitHub username, get the map of what they’ve actually built: repos clustered by topic, the highlight of each group, and stars over time.",
         "url": "https://evoluteur.github.io/repo-atlas/",
         "image": "https://evoluteur.github.io/repo-atlas/repo-atlas.png",
         "applicationCategory": "DeveloperApplication",
@@ -145,6 +145,14 @@
           </div>
         </section>
 
+        <section aria-labelledby="h-hl">
+          <div class="sec-head">
+            <h2 id="h-hl">Highlights</h2>
+            <p>The most-starred repo in each group. Start here.</p>
+          </div>
+          <div class="hl" id="hl"></div>
+        </section>
+
         <section aria-labelledby="h-tl">
           <div class="sec-head">
             <h2 id="h-tl">Stars over time</h2>
@@ -222,6 +230,14 @@
             the account, and compared repo to repo. Repos that stay similar
             enough are merged (average linkage, cut at 0.16). The eight biggest
             groups by stars get a color; the rest fold into <i>loners</i>.
+          </p>
+        </div>
+        <div>
+          <h3>Highlights</h3>
+          <p>
+            One repo per colored group: the one with the most stars, ties
+            going to the most recently pushed. Hover a card to find its group
+            on the map.
           </p>
         </div>
         <div>

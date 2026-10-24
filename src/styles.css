@@ -1,5 +1,5 @@
 /* Layout: an atlas plate. Header strip, title block, then map + legend side by side,
-   then the timeline, and the share card. */
+   then the highlights, the timeline, and the share card. */
 :root {
   --paper: #f3f5f7;
   --surface: #ffffff;
@@ -186,6 +186,23 @@ g.region, a.leaf { transition: opacity .15s; }
 }
 .lg-more:hover { text-decoration-style: solid; }
 .lg-more:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 2px; }
+
+/* highlights */
+.hl { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.hl-card {
+  background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--group); border-radius: var(--radius);
+  padding: 14px 16px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+}
+.hl-group { display: inline-flex; align-items: center; gap: 6px; font: 500 11.5px var(--f-data); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.hl-group i { width: 9px; height: 9px; border-radius: 2px; background: var(--group); flex: none; }
+.hl-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.hl-name { font: 700 22px/1.1 var(--f-display); letter-spacing: .02em; text-decoration: none; overflow-wrap: anywhere; min-width: 0; }
+.hl-name:hover { text-decoration: underline; }
+.hl-stars { font: 600 14px var(--f-data); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hl-stars .star { font-size: 1.6em; line-height: 1; margin-left: 2px; vertical-align: -0.1em; }
+.hl-desc { margin: 0; color: var(--ink-2); font-size: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hl-meta { font: 12px var(--f-data); color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: auto; padding-top: 6px; border-top: 1px dashed var(--line); }
+.hl-meta a { color: var(--focus); }
 
 /* timeline */
 .tl-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 10px; padding: 0 2px; font: 12px var(--f-data); color: var(--ink-2); }
